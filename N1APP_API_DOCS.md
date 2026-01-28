@@ -1,6 +1,6 @@
 # N1App API Documentation
 
-**Base URL**: `https://api.n1boost.com`
+**Base URL**: `https://YOUR_API_ENDPOINT_HERE`
 
 This document provides details for the N1App integration endpoints. These endpoints are designed to allow boosters to access their claimed orders and specific order details via a secure API.
 
@@ -10,7 +10,7 @@ All endpoints require the following authentication mechanisms:
 
 **API Key**: Must be provided in the request **Header**.
     -   Key: `x-api-key`
-    -   Value: Provided by the administrator (e.g., `UP5h8LIL5t3PdAFxMw5jinWsT1I7sW3N`)
+    -   Value: Provided by the administrator (e.g., `YOUR_SECURE_API_KEY_HERE`)
 
 ---
 

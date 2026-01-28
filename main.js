@@ -185,8 +185,8 @@ app.on('window-all-closed', () => {
 });
 
 // --- API Handlers ---
-const API_BASE = "https://api.n1boost.com/v1/n1app";
-const API_KEY = "UP5h8LIL5t3PdAFxMw5jinWsT1I7sW3N";
+const API_BASE = "https://YOUR_API_ENDPOINT_HERE/v1/n1app";
+const API_KEY = "YOUR_SECURE_API_KEY_HERE";
 
 ipcMain.handle('auth-secure', async (event, { email, password }) => {
     try {

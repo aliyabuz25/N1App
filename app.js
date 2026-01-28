@@ -337,8 +337,8 @@ window.logout = function () {
 window.demoSteamLogin = function () {
   console.log("[DEBUG] Demo Steam login triggered");
   window.electronAPI.launchGame({
-    username: 'alixx234',
-    password: 'Aliyabuz1990',
+    username: 'YOUR_USERNAME',
+    password: 'YOUR_PASSWORD',
     gameMotor: 'steam'
   });
   if (typeof showConsole === 'function') showConsole();
