@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N1App</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <!-- Background Aura -->
+  <div class="smoke-bg">
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="smoke-particle p1"></div>
+    <div class="smoke-particle p2"></div>
+  </div>
+
+  <header>
+    <div class="header-left">
+      <button id="menuBtn" class="menu-btn" onclick="toggleSidebar()">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="logo-area">
+        <img src="n1logo2.png" height="18" alt="N1">
+      </div>
+    </div>
+    <div class="window-controls">
+      <button class="window-btn" onclick="window.electronAPI.minimizeApp()">
+        <i data-lucide="minus" style="width: 14px; height: 14px;"></i>
+      </button>
+      <button class="window-btn close" onclick="window.electronAPI.closeApp()">
+        <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <!-- Unauthenticated View (shown when not logged in) -->
+    <div id="sidebarPlaceholder" class="sidebar-placeholder">
+      <div class="lock-icon">
+        <i data-lucide="lock"></i>
+      </div>
+      <p>AUTHENTICATION REQUIRED</p>
+      <span>Please log in to access system functions.</span>
+    </div>
+
+    <!-- Authenticated View (hidden until login) -->
+    <div id="sidebarAuthContent" style="display: none; flex-direction: column; height: 100%;">
+      <div class="sidebar-header">
+        <div class="user-profile">
+          <div class="pfp-container">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=N1" alt="PFP" class="user-pfp">
+            <div class="status-indicator"></div>
+          </div>
+          <div class="user-info">
+            <span id="userNameDisplay" class="username">Booster</span>
+            <span class="user-role">Premium Operative</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <label>FINANCIALS</label>
+          <div class="nav-item">
+            <i data-lucide="wallet"></i>
+            <div class="nav-content">
+              <span class="nav-label">Balance</span>
+              <span id="sidebarBalance" class="nav-value">18.12 USD</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <label>SYSTEM STATUS</label>
+          <div class="nav-item">
+            <i data-lucide="clock"></i>
+            <div class="nav-content">
+              <span class="nav-label">Last Login</span>
+              <span id="sidebarLastLogin" class="nav-value">Jan 27 • 11:22</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button onclick="logout()" class="logout-btn">
+          <i data-lucide="log-out"></i>
+          <span>DE-AUTHENTICATE</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <main class="app-content">
+
+    <!-- Initial Loader Overlay -->
+    <div id="loader" class="fixed-loader">
+      <div class="spinner-large"></div>
+      <p id="loader-text" data-tr="N1 GÜVENLİK PROTOKOLÜ" data-de="N1 SICHERHEITSPROTOKOLL">N1 SECURITY PROTOCOL</p>
+    </div>
+
+    <div class="form-body" id="app-body" style="opacity: 0; transform: translateY(10px);">
+
+      <!-- Brand Identity (Logo Removed for Minimalism) -->
+
+      <!-- Login SECTION -->
+      <section id="loginView">
+        <div class="input-group">
+          <label for="username" data-tr="Erişim Kimliği" data-de="Zugriffsidentität">Access Identity</label>
+          <div class="input-wrapper">
+            <input type="text" id="username" class="input-field" placeholder="email@n1boost.com" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="password" data-tr="Güvenlik Kodu" data-de="Sicherheitscode">Security Code</label>
+          <div class="input-wrapper">
+            <input type="password" id="password" class="input-field" placeholder="••••••••">
+          </div>
+        </div>
+
+        <button id="loginButton" class="btn-primary" onclick="login()" data-tr="SİSTEMİ YETKİLENDİR"
+          data-de="SYSTEM AUTORISIEREN">
+          <div id="logSpin" class="spinner-small hidden"></div>
+          <span data-tr="SİSTEMİ YETKİLENDİR" data-de="SYSTEM AUTORISIEREN" data-en="AUTHORIZE SYSTEM">AUTHORIZE
+            SYSTEM</span>
+        </button>
+      </section>
+
+      <!-- Orders SECTION -->
+      <section id="tokenList" style="display: none;">
+
+        <!-- (Dashboard stats removed from here as they are now in sidebar) -->
+
+        <h1 data-tr="BOOST SİPARİŞLERİ" data-de="BOOST-AUFTRÄGE">BOOST ORDERS</h1>
+        <p class="subtitle" data-tr="Ağda mevcut operasyonel görevler"
+          data-de="Operative Aufgaben im Netzwerk verfügbar">Operational tasks available in network</p>
+
+        <div class="input-group">
+          <label for="ordersList" data-tr="BEKLEYEN SİPARİŞLER" data-de="AUSSTEHENDE BESTELLUNGEN">PENDING
+            ORDERS</label>
+          <select id="ordersList" onchange="setGame()" class="input-field"></select>
+        </div>
+
+        <div id="orderDetailBox" style="visibility: hidden;">
+          <div class="order-card-lite">
+            <div class="game-icon-box" id="gameIconPlaceholder"></div>
+            <div>
+              <div id="platformName" style="font-weight: 700; font-size: 15px; color: var(--text-primary);"
+                data-tr="Oyun Seçilmedi" data-de="Spiel nicht ausgewählt">Game
+                Unselected</div>
+              <div id="oType" class="status-badge" data-tr="BEKLİYOR" data-de="WARTEND">AWAITING</div>
+            </div>
+          </div>
+        </div>
+
+        <button id="launchButton" disabled onclick="launchGame()" class="btn-primary" data-tr="PROTOKOLÜ BAŞLAT"
+          data-de="PROTOKOLL STARTEN">
+          <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
+          INITIATE PROTOCOL
+        </button>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <button onclick="logout()" class="btn-ghost" style="width: 100%; border-style: dashed;"
+            data-tr="OTURUMU KAPAT" data-de="ABMELDEN">DE-AUTHENTICATE</button>
+
+          <!-- DEV ONLY: DEMO STEAM LOGIN -->
+          <button onclick="demoSteamLogin()" class="btn-ghost"
+            style="width: 100%; border-style: dotted; color: #60a5fa; margin-top: 10px; font-size: 10px;">
+            DEBUG: DEMO STEAM LOGIN
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Anticheat Console Modal -->
+    <div id="consoleModal" class="console-modal hidden">
+      <div class="console-header">
+        <div class="console-title">
+          <i data-lucide="shield-check" style="width: 14px; height: 14px; color: #00ff41;"></i>
+          <span>N1 AUTHENTICATION SERVICE [v3.0.1]</span>
+        </div>
+        <div id="consoleTime" class="console-time">11:40:00</div>
+      </div>
+      <div id="consoleLogs" class="console-logs">
+        <div class="log-line">> Initializing security layer...</div>
+        <div class="log-line">> Awaiting sequence...</div>
+      </div>
+    </div>
+    <div id="consoleOverlay" class="console-overlay hidden"></div>
+
+    <!-- Active Service Paths -->
+    <div class="bottom-config">
+      <div class="path-row">
+        <span class="path-label">CORE.R:</span>
+        <span id="riotPathText" class="path-value">LINKING...</span>
+      </div>
+      <div class="path-row">
+        <span class="path-label">CORE.S:</span>
+        <span id="steamPathText" class="path-value">LINKING...</span>
+      </div>
+      <div class="path-row">
+        <span class="path-label">CORE.E:</span>
+        <span id="eaPathText" class="path-value">LINKING...</span>
+      </div>
+    </div>
+
+    <!-- Language Selection -->
+    <div class="lang-selector">
+      <button class="lang-btn" onclick="toggleLangMenu()">
+        <img id="currentFlag" src="https://flagcdn.com/w20/gb.png" width="18" alt="en">
+        <span id="currentLangLabel">EN</span>
+        <i data-lucide="chevron-up" style="width: 14px; height: 14px;"></i>
+      </button>
+      <div id="langMenu" class="lang-menu hidden">
+        <div class="lang-option" onclick="setLanguage('en')">
+          <img src="https://flagcdn.com/w20/gb.png" width="18" alt="en">
+          <span>English</span>
+        </div>
+        <div class="lang-option" onclick="setLanguage('tr')">
+          <img src="https://flagcdn.com/w20/tr.png" width="18" alt="tr">
+          <span>Türkçe</span>
+        </div>
+        <div class="lang-option" onclick="setLanguage('de')">
+          <img src="https://flagcdn.com/w20/de.png" width="18" alt="de">
+          <span>Deutsch</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy Protocol -->
+    <div id="privacyBanner" class="privacy-overlay hidden">
+      <div class="privacy-content">
+        <div class="privacy-header">
+          <div class="privacy-info">
+            <div class="privacy-icon">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div class="privacy-text-box">
+              <h3 style="font-family: 'Outfit'; font-size: 18px;" data-tr="Gizlilik Protokolü"
+                data-de="Datenschutzprotokoll">Privacy Protocol</h3>
+              <p data-tr="Booster ortamının bütünlüğünü sağlamak ve ağ paketlerini optimize etmek için çerezler kullanıyoruz."
+                data-de="Wir verwenden verschlüsselte Cookies, um die Integrität der Booster-Umgebung zu gewährleisten und die Netzwerkbereitstellung zu optimieren.">
+                We utilize encrypted cookies to ensure the integrity of the booster environment and optimize network
+                delivery.</p>
+              <a href="#" style="color: var(--accent); font-weight: 700;" data-tr="ŞARTLARI İNCELE"
+                data-de="BEDINGUNGEN ÜBERPRÜFEN">REVIEW TERMS</a>
+            </div>
+          </div>
+          <button class="close-privacy" onclick="closePrivacy()">&times;</button>
+        </div>
+        <div class="privacy-actions" style="margin-top: 20px;">
+          <button class="btn-ghost" onclick="closePrivacy()" style="flex:1" data-tr="REDDET"
+            data-de="ABLEHNEN">REJECT</button>
+          <button class="btn-primary" onclick="acceptPrivacy()" style="flex:1" data-tr="ONAYLA"
+            data-de="BESTÄTIGEN">ACKNOWLEDGE</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="ui.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

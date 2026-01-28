@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+compile_log.txt
+LauncherTool.exe
+.git/
+.env
+configs/
+*.tmp
+*.zip
+*.exe
+!LauncherTool.exe

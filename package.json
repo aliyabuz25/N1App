@@ -1,0 +1,41 @@
+{
+  "name": "n1app-electron",
+  "version": "1.0.0",
+  "description": "N1App",
+  "main": "main.js",
+  "author": "N1Boost Group",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --windows"
+  },
+  "build": {
+    "appId": "tech.n1boost.n1app",
+    "productName": "N1App",
+    "copyright": "Copyright © 2025 N1Boost",
+    "asar": true,
+    "compression": "maximum",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "n1logo2.png",
+      "target": "portable",
+      "requestedExecutionLevel": "asInvoker",
+      "publisherName": "N1Boost"
+    },
+    "portable": {
+      "artifactName": "N1App_v${version}_Portable.${ext}"
+    },
+    "files": [
+      "**/*",
+      "!dist",
+      "!node_modules/electron-builder${/*}",
+      "!node_modules/electron${/*}",
+      "!*.ps1"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}
